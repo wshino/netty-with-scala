@@ -8,9 +8,6 @@ import io.netty.channel.{ChannelOption, ChannelInitializer, EventLoopGroup}
 import io.netty.channel.nio.NioEventLoopGroup
 import io.netty.channel.socket.nio.NioServerSocketChannel
 
-/**
- * Created by JP16163 on 2014/09/22.
- */
 class DiscardServer(p:Int) {
 
   private val port: Int = p
