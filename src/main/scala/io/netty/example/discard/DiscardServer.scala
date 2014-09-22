@@ -1,10 +1,8 @@
 package io.netty.example.discard
 
-//import java.nio.channels.SocketChannel
-
 import io.netty.bootstrap.ServerBootstrap
 import io.netty.channel.socket.SocketChannel
-import io.netty.channel.{ChannelOption, ChannelInitializer, EventLoopGroup}
+import io.netty.channel.{ChannelOption, ChannelInitializer}
 import io.netty.channel.nio.NioEventLoopGroup
 import io.netty.channel.socket.nio.NioServerSocketChannel
 
@@ -18,15 +16,19 @@ class DiscardServer(p:Int) {
 
     try {
       val b = new ServerBootstrap()
-      b.group(bossGroup, workerGroup)
+      .group(bossGroup, workerGroup)
       .channel(classOf[NioServerSocketChannel])
       .childHandler(new ChannelInitializer[SocketChannel] {
         override def initChannel(ch: SocketChannel) = {
           ch.pipeline().addLast(new DiscardServerHandler)
         }
       })
-      .option(ChannelOption.SO_BACKLOG, 128)
-      .childOption(ChannelOption.SO_KEEPALIVE, true)
+      .option[Integer](ChannelOption.SO_BACKLOG, 128)
+      .childOption[java.lang.Boolean](ChannelOption.SO_KEEPALIVE, true)
+
+      val f = b.bind(port).sync()
+      f.channel().closeFuture().sync()
+
     } finally {
       workerGroup.shutdownGracefully()
       bossGroup.shutdownGracefully()
@@ -34,6 +36,11 @@ class DiscardServer(p:Int) {
   }
 }
 
-object DiscardServer {
+object DiscardServer extends App {
 
+  val port = args.length match {
+    case x if x > 0 => Integer.parseInt(args(0))
+    case _ => 8080
+  }
+  new DiscardServer(port).run()
 }
