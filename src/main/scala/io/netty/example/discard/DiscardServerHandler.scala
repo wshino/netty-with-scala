@@ -10,16 +10,15 @@ import io.netty.util.ReferenceCountUtil
 class DiscardServerHandler extends ChannelHandlerAdapter{
 
   override def channelRead(ctx: ChannelHandlerContext, msg: Object) = {
-    var in = msg.asInstanceOf[ByteBuf]
+    val in = msg.asInstanceOf[ByteBuf]
     try {
-      while (in.isReadable()) {
+      while (in.isReadable) {
         System.out.println(in.readByte())
         System.out.flush()
       }
     } finally {
       ReferenceCountUtil.release(msg)
     }
-//    (msg.asInstanceOf[ByteBuf]).release()
   }
 
 
