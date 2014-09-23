@@ -17,7 +17,7 @@ object TimeClient extends App {
     val b: Bootstrap = new Bootstrap
     b.group(workerGroup)
     b.channel(classOf[NioSocketChannel])
-    b.option(ChannelOption.SO_KEEPALIVE, true)
+    b.option[java.lang.Boolean](ChannelOption.SO_KEEPALIVE, true)
     b.handler(new ChannelInitializer[SocketChannel] {
       override def initChannel(ch: SocketChannel): Unit = {
         ch.pipeline().addLast(new TimeClientHandler)
