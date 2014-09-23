@@ -27,7 +27,6 @@ object TimeClient extends App {
     val f = b.connect(host, port).sync()
 
     f.channel().closeFuture().sync()
-
   } finally {
     workerGroup.shutdownGracefully()
   }

@@ -1,20 +1,13 @@
 package io.netty.example.time
 
-import io.netty.channel.{ChannelFuture, ChannelFutureListener, ChannelHandlerAdapter, ChannelHandlerContext}
+import io.netty.channel.{ChannelFutureListener, ChannelHandlerAdapter, ChannelHandlerContext}
 
 class TimeServerHandler extends ChannelHandlerAdapter {
 
   override def channelActive(ctx: ChannelHandlerContext) = {
-    val time = ctx.alloc().buffer(4)
-    time.writeInt((System.currentTimeMillis() / 1000L + 2208988800L).asInstanceOf[Int])
-
-    val f = ctx.writeAndFlush(time)
-    f.addListener(new ChannelFutureListener {
-      override def operationComplete(future: ChannelFuture) = {
-        assert(f == future)
-        ctx.close()
-      }
-    })
+    val a = UnixTime.apply()
+    val f = ctx.writeAndFlush(a)
+    f.addListener(ChannelFutureListener.CLOSE)
   }
 
   override def exceptionCaught(ctx: ChannelHandlerContext, cause: Throwable) = {
