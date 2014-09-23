@@ -5,8 +5,7 @@ import io.netty.channel.{ChannelFutureListener, ChannelHandlerAdapter, ChannelHa
 class TimeServerHandler extends ChannelHandlerAdapter {
 
   override def channelActive(ctx: ChannelHandlerContext) = {
-    val a = UnixTime.apply()
-    val f = ctx.writeAndFlush(a)
+    val f = ctx.writeAndFlush(UnixTime())
     f.addListener(ChannelFutureListener.CLOSE)
   }
 
