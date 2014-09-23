@@ -20,7 +20,7 @@ object TimeClient extends App {
     b.option[java.lang.Boolean](ChannelOption.SO_KEEPALIVE, true)
     b.handler(new ChannelInitializer[SocketChannel] {
       override def initChannel(ch: SocketChannel): Unit = {
-        ch.pipeline().addLast(new TimeClientHandler)
+        ch.pipeline().addLast(new TimeDecoder, new TimeClientHandler)
       }
     })
 
